@@ -1,0 +1,24 @@
+tqdm
+numpy
+faiss-cpu>=1.6.1
+# custom
+# gensim==3.8.3
+pandas
+# numpy
+# jupyter
+# textdistance
+# beautifulsoup4
+# SPARQLWrapper
+# seaborn
+# matplotlib
+# sklearn
+# scikit-learn-extra
+# tabulate
+# addict
+uvicorn
+fastapi
+# supervisor
+psycopg[binary]
+# annoy
+gatenlp
+requests

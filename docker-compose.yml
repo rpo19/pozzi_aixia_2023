@@ -1,0 +1,83 @@
+version: "3"
+services:
+
+  spacyner:
+    restart: $RESTART_POLICY
+    build: ./spacyner
+    environment:
+      SPACY_MODEL: $SPACY_MODEL
+      SPACY_TAG: $SPACY_TAG
+    volumes:
+      - ${LOCAL_WORKSPACE_FOLDER}/models:/home/app/models
+      - ./spacyner/main.py:/home/app/main.py
+    ports:
+      - 127.0.0.1:9000:80
+    # run on GPU
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - capabilities: [ gpu ]
+
+  biencoder:
+    restart: $RESTART_POLICY
+    build:
+      context: ./biencoder
+      dockerfile: Dockerfile
+    volumes:
+      - ${LOCAL_WORKSPACE_FOLDER}/models:/home/app/models
+      - ./biencoder/main.py:/home/app/main.py
+    environment:
+      PYTHONPATH: /home/app
+      BIENCODER_MODEL: $BIENCODER_MODEL
+      BIENCODER_CONFIG: $BIENCODER_CONFIG
+    ports:
+      - 127.0.0.1:9001:80
+    # run on GPU
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - capabilities: [ gpu ]
+
+  nilpredictor:
+    restart: $RESTART_POLICY
+    build:
+        context: ./nilpredictor
+        dockerfile: Dockerfile
+    volumes:
+      - ${LOCAL_WORKSPACE_FOLDER}/models:/home/app/models
+      - ./nilpredictor/main.py:/home/app/main.py
+    environment:
+      NILPREDICTOR_ARGS: $NILPREDICTOR_ARGS
+    ports:
+      - 127.0.0.1:9003:80
+
+  indexer:
+    restart: $RESTART_POLICY
+    build:
+        context: ./indexer
+        dockerfile: Dockerfile
+    volumes:
+      - ${LOCAL_WORKSPACE_FOLDER}/models:/home/app/models
+      - ./indexer/main.py:/home/app/main.py
+    environment:
+      INDEXER_INDEX: $INDEXER_INDEX
+      POSTGRES_PASSWORD: $POSTGRES_PASSWORD
+      INDEXER_VECTOR_SIZE: $INDEXER_VECTOR_SIZE
+      INDEXER_LANGUAGE: $INDEXER_LANGUAGE
+    depends_on:
+      - postgres
+    ports:
+      - 127.0.0.1:9002:80
+
+  postgres:
+    restart: $RESTART_POLICY
+    image: postgres:14.8
+    environment:
+      POSTGRES_PASSWORD: $POSTGRES_PASSWORD
+    volumes:
+      - ./postgres/data:/var/lib/postgresql/data
+      - "./postgres/init.sql:/docker-entrypoint-initdb.d/init.sql"
+    ports:
+      - 127.0.0.1:5432:5432

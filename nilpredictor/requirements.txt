@@ -1,0 +1,11 @@
+tqdm==4.32.1
+# custom
+# gensim==3.8.3
+pandas
+numpy
+textdistance
+sklearn
+scikit-learn-extra
+uvicorn
+fastapi
+gatenlp

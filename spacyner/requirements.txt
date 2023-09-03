@@ -1,0 +1,6 @@
+spacy
+spacy-transformers
+thinc[cuda113,torch]
+fastapi
+uvicorn
+gatenlp

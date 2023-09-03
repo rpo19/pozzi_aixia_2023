@@ -1,0 +1,12 @@
+COMPOSE_PROJECT_NAME=pipeline_aixia
+POSTGRES_PASSWORD=secret
+LOCAL_WORKSPACE_FOLDER=/path/to/
+SPACY_MODEL=it_core_new_sm
+SPACY_TAG=spacy_v0.1.0
+INDEXER_LANGUAGE=it
+INDEXER_INDEX=hnsw:models/faiss_hnsw.pkl:0:r,flat:models/flat_kbp.pkl:1:rw
+INDEXER_VECTOR_SIZE=1024
+BIENCODER_CONFIG=models/biencoder_model.bin
+BIENCODER_MODEL=models/biencoder_config.json
+NILPREDICTOR_ARGS=--nil-bi-model models/nilp_bi_max_secondiff_model.pickle --nil-bi-features max_bi,secondiff
+RESTART_POLICY=no
