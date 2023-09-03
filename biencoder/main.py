@@ -14,6 +14,8 @@ import logging
 from torch.utils.data import DataLoader, SequentialSampler
 from gatenlp import Document
 
+ANNSET_TO_LINK='entities_spacy_v0.1.0'
+
 def vector_encode(v):
     s = base64.b64encode(v).decode()
     return s
@@ -44,7 +46,7 @@ app = FastAPI()
 async def encode_mention_from_doc(doc: dict = Body(...)):
     doc = Document.from_dict(doc)
 
-    annsets_to_link = set([doc.features.get('annsets_to_link', 'entities_merged')])
+    annsets_to_link = set([doc.features.get('annsets_to_link', ANNSET_TO_LINK)])
 
     samples = []
     mentions = []

@@ -7,6 +7,7 @@ services:
     environment:
       SPACY_MODEL: $SPACY_MODEL
       SPACY_TAG: $SPACY_TAG
+      SPACY_GPU: $SPACY_GPU
     volumes:
       - ${LOCAL_WORKSPACE_FOLDER}/models:/home/app/models
       - ./spacyner/main.py:/home/app/main.py

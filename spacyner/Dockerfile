@@ -6,4 +6,4 @@ COPY . .
 
 RUN pip install --no-cache-dir --upgrade -r /home/app/requirements.txt
 
-CMD python main.py --host 0.0.0.0 --port 80 --model $SPACY_MODEL --tag "$SPACY_TAG"
+CMD python main.py --host 0.0.0.0 --port 80 --model $SPACY_MODEL --tag "$SPACY_TAG" --gpu "$SPACY_GPU"

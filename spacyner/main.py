@@ -78,11 +78,16 @@ if __name__ == '__main__':
     parser.add_argument(
         "--sents", action='store_true', default=False, help="Do sentence tokenization",
     )
+    parser.add_argument(
+        "--gpu", type=str, default="yes", help="Use GPU",
+    )
 
     args = parser.parse_args()
 
     print('Loading spacy model...')
     # Load spacy model
+    if args.gpu == 'yes':
+        spacy.require_gpu()
     try:
         spacy_pipeline = spacy.load(args.model, exclude=['tok2vec', 'morphologizer', 'tagger', 'parser', 'attribute_ruler', 'lemmatizer'])
     except Exception as e:

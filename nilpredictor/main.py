@@ -36,6 +36,7 @@ class Features(BaseModel):
     candidateIndexer: Optional[int]
     # stats
     topcandidates: Optional[List[Candidate]]
+    secondiff: Optional[float]
 
 app = FastAPI()
 
@@ -43,7 +44,7 @@ app = FastAPI()
 async def nilprediction_doc_api(doc: dict = Body(...)):
     doc = Document.from_dict(doc)
 
-    annsets_to_link = set([doc.features.get('annsets_to_link', 'entities_merged')])
+    annsets_to_link = set([doc.features.get('annsets_to_link', 'entities_spacy_v0.1.0')])
 
     input = []
     mentions = []
@@ -70,6 +71,8 @@ async def nilprediction_doc_api(doc: dict = Body(...)):
             feat.mention = mention.features['mention'] if 'mention' in mention.features \
                                                         else doc.text[mention.start:mention.end]
             feat.title = gt_features['title'] if 'title' in gt_features else None
+
+            feat.topcandidates = [Candidate(**c) for c in mention.features['additional_candidates']]
 
             input.append(feat)
             mentions.append(mention)
@@ -121,6 +124,11 @@ def run(input: List[Features]):
             data.append(features.max_cross)
             index.append('max_cross')
 
+        if features.secondiff:
+            data.append(features.secondiff)
+            index.append('secondiff')
+
+
         # process features
         _jacc, _leve = process_text_similarities(
             mention=features.mention, title=features.title, jaccard=features.jaccard, levenshtein=features.levenshtein)
@@ -144,12 +152,16 @@ def run(input: List[Features]):
             stats = {
                 'mean': statistics.mean(scores),
                 'median': statistics.median(scores),
-                'stdev': statistics.stdev(scores)
+                'stdev': statistics.stdev(scores),
+                'secondiff': scores[0] - scores[1]
             }
 
-            for i,v in stats.items():
+            assert scores[0] == max(scores)
+            assert scores[1] == max(scores[1:])
+
+            for i_,v in stats.items():
                 data.append(v)
-                index.append(i)
+                index.append(i_)
 
         nil_X.loc[i, index] = pd.Series(data=data, index=index, name=i)
 

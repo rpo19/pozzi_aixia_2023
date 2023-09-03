@@ -149,7 +149,7 @@ async def search_from_doc_topk_api(top_k: int, doc: dict = Body(...)):
 def search_from_doc_topk(top_k, doc):
     doc = Document.from_dict(doc)
 
-    annsets_to_link = set([doc.features.get('annsets_to_link', 'entities_merged')])
+    annsets_to_link = set([doc.features.get('annsets_to_link', 'entities_spacy_v0.1.0')])
 
     encodings = []
     mentions = []
