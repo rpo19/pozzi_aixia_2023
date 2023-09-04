@@ -1,4 +1,4 @@
-# Setup
+# Setup and Run the pipeline
 
 - Install docker and docker compose; https://docs.docker.com/engine/install/
 - Copy env and set variables
@@ -36,3 +36,15 @@ jupyter-notebook --port 9010
 
 - Try the pipeline
 
+# Example NER training
+
+- Prepare training data in spacy format, e.g., with train.spacy, dev.spacy, and test.spacy in the folder data.
+- Prepare the `config.cfg` (see the example in this repo)
+- Train spacy
+```
+spacy train config.cfg --output spacyner --gpu-id 0 --paths.train ./data/train.spacy --paths.dev ./data/valid.spacy
+```
+- Eval model
+```
+spacy evaluate --gpu-id 0 spacyner ./data/test.spacy
+```
