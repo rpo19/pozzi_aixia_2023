@@ -3,3 +3,4 @@ models
 venv
 .ipynb_checkpoints
 postgres/data
+models.zip
